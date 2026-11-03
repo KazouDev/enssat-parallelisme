@@ -1,0 +1,10 @@
+Test : MontagneFoncee
+Commande : ./a.out data/MontagneFoncee.pgm
+Date : 2026-11-02 15:56:51
+Exécutions : 100
+
+Moyenne : 0.715040 ms
+Écart-type : 0.016156 ms
+Médiane : 0.708816 ms
+Minimum : 0.700730 ms
+Maximum : 0.778975 ms

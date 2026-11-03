@@ -1,0 +1,28 @@
+==================================
+   CONFIGURATION DE LA MACHINE
+==================================
+Date : Tue Nov  3 12:25:32 CET 2026
+Machine : macbook-air-de-ethan.home
+
+========== SYSTEME ==========
+Darwin macbook-air-de-ethan.home 25.0.0 Darwin Kernel Version 25.0.0: Mon Aug 25 21:17:53 PDT 2025; root:xnu-12377.1.9~3/RELEASE_ARM64_T8112 arm64
+
+========== PROCESSEUR ==========
+Architecture : arm64
+Model name : Apple M2
+CPU(s) : 8
+Coeurs performance : 4
+Coeurs efficacite : 4
+L1d cache (P) : 128 KiB
+L2 cache (P) : 16 MiB
+
+========== MEMOIRE RAM ==========
+Total : 16 Gi
+
+========== CHARGE CPU ==========
+12:25  up 5 days, 20:22, 2 users, load averages: 2.47 2.60 2.46
+
+========== COMPILATEUR ==========
+Apple clang version 15.0.0 (clang-1500.3.9.4)
+Apple clang version 15.0.0 (clang-1500.3.9.4)
+

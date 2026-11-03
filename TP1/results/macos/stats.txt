@@ -1,0 +1,10 @@
+Test : macos
+Commande : ./a.out data/image1.pgm
+Date : 2026-11-03 12:25:33
+Exécutions : 100
+
+Moyenne : 0.333890 ms
+Écart-type : 0.041178 ms
+Médiane : 0.329000 ms
+Minimum : 0.301000 ms
+Maximum : 0.633000 ms

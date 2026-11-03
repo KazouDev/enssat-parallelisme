@@ -1,0 +1,48 @@
+==================================
+   CONFIGURATION DE LA MACHINE
+==================================
+Date : Mon Nov  2 15:51:13 CET 2026
+Machine : crook-a-16
+
+========== SYSTEME ==========
+Linux crook-a-16 7.0.0-38-generic #38~24.04.4-Ubuntu SMP PREEMPT_DYNAMIC Mon Sep 14 16:37:11 UTC 2 x86_64 x86_64 x86_64 GNU/Linux
+
+========== PROCESSEUR ==========
+Architecture:                            x86_64
+CPU(s):                                  14
+Model name:                              Intel(R) Core(TM) Ultra 5 235
+Thread(s) per core:                      1
+Core(s) per socket:                      14
+Socket(s):                               1
+CPU max MHz:                             5000.0000
+CPU min MHz:                             800.0000
+L1d cache:                               416 KiB (10 instances)
+L1i cache:                               640 KiB (10 instances)
+L2 cache:                                26 MiB (8 instances)
+L3 cache:                                24 MiB (1 instance)
+
+========== MEMOIRE RAM ==========
+               total        used        free      shared  buff/cache   available
+Mem:            15Gi       5.4Gi       4.2Gi       982Mi       6.1Gi       9.6Gi
+Swap:          2.0Gi          0B       2.0Gi
+
+========== FREQUENCES CPU ==========
+cpu MHz		: 4405.359
+cpu MHz		: 3977.699
+cpu MHz		: 2177.562
+cpu MHz		: 1971.641
+cpu MHz		: 2105.166
+cpu MHz		: 4401.267
+cpu MHz		: 4297.782
+cpu MHz		: 4299.127
+
+========== CHARGE CPU ==========
+ 15:51:14 up 26 min,  1 user,  load average: 0.50, 0.54, 0.65
+
+========== COMPILATEUR ==========
+gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+
+========== OPTIONS CPU ==========
+Flags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf tsc_known_freq pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid rdt_a rdseed adx smap clflushopt clwb intel_pt sha_ni xsaveopt xsavec xgetbv1 xsaves split_lock_detect user_shstk avx_vnni lam wbnoinvd dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp hwp_pkg_req hfi vnmi umip pku ospke waitpkg gfni vaes vpclmulqdq rdpid bus_lock_detect movdiri movdir64b fsrm md_clear serialize pconfig arch_lbr ibt flush_l1d arch_capabilities
+

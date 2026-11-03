@@ -1,0 +1,9 @@
+Test : image1
+Commande : ./a.out image1.pgm
+Date : 2026-11-02 15:51:13
+Exécutions : 100
+
+Moyenne : 0.119 ms
+Écart-type : 0.005 ms
+Minimum : 0.114 ms
+Maximum : 0.147 ms
