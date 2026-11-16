@@ -1,0 +1,10 @@
+Test : image2_newpc
+Commande : ./rehaussement ./data/MontagneFoncee.pgm
+Date : 2026-11-16 12:17:18
+Exécutions : 100
+
+Moyenne : 0.145364 ms
+Écart-type : 0.016799 ms
+Médiane : 0.140346 ms
+Minimum : 0.123635 ms
+Maximum : 0.243020 ms

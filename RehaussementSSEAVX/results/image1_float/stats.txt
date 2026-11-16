@@ -1,0 +1,10 @@
+Test : image1_float
+Commande : ./rehaussement ./data/image1.pgm
+Date : 2026-11-16 11:12:18
+Exécutions : 100
+
+Moyenne : 0.157327 ms
+Écart-type : 0.033122 ms
+Médiane : 0.161229 ms
+Minimum : 0.069204 ms
+Maximum : 0.237252 ms

@@ -1,0 +1,10 @@
+Test : image1_char
+Commande : ./rehaussement ./data/image1.pgm
+Date : 2026-11-16 12:14:02
+Exécutions : 100
+
+Moyenne : 0.051254 ms
+Écart-type : 0.016860 ms
+Médiane : 0.054059 ms
+Minimum : 0.019367 ms
+Maximum : 0.087944 ms
