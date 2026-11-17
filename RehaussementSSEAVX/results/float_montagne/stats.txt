@@ -1,0 +1,10 @@
+Test : float_montagne
+Commande : ./rehaussement_float data/MontagneFoncee.pgm
+Date : 2026-11-17 09:28:55
+Exécutions : 100
+
+Moyenne : 0.135104 ms
+Écart-type : 0.033447 ms
+Médiane : 0.119288 ms
+Minimum : 0.108531 ms
+Maximum : 0.234412 ms

@@ -1,0 +1,48 @@
+==================================
+   CONFIGURATION DE LA MACHINE
+==================================
+Date : Tue Nov 17 09:29:02 CET 2026
+Machine : ross-a-07
+
+========== SYSTEME ==========
+Linux ross-a-07 7.0.0-38-generic #38~24.04.4-Ubuntu SMP PREEMPT_DYNAMIC Mon Sep 14 16:37:11 UTC 2 x86_64 x86_64 x86_64 GNU/Linux
+
+========== PROCESSEUR ==========
+Architecture:                            x86_64
+CPU(s):                                  8
+Model name:                              Intel(R) Core(TM) i3-10100 CPU @ 3.60GHz
+Thread(s) per core:                      2
+Core(s) per socket:                      4
+Socket(s):                               1
+CPU max MHz:                             4300.0000
+CPU min MHz:                             800.0000
+L1d cache:                               128 KiB (4 instances)
+L1i cache:                               128 KiB (4 instances)
+L2 cache:                                1 MiB (4 instances)
+L3 cache:                                6 MiB (1 instance)
+
+========== MEMOIRE RAM ==========
+               total        used        free      shared  buff/cache   available
+Mem:            15Gi       4.8Gi       2.4Gi       655Mi       9.2Gi        10Gi
+Swap:          2.0Gi          0B       2.0Gi
+
+========== FREQUENCES CPU ==========
+cpu MHz		: 4198.342
+cpu MHz		: 4205.821
+cpu MHz		: 800.000
+cpu MHz		: 4192.209
+cpu MHz		: 4146.102
+cpu MHz		: 3500.494
+cpu MHz		: 4102.329
+cpu MHz		: 2499.634
+
+========== CHARGE CPU ==========
+ 09:29:02 up  1:19,  1 user,  load average: 0.88, 0.88, 0.79
+
+========== COMPILATEUR ==========
+gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+
+========== OPTIONS CPU ==========
+Flags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp vnmi md_clear flush_l1d arch_capabilities
+

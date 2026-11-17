@@ -1,0 +1,10 @@
+Test : short_img1
+Commande : ./rehaussement_short data/image1.pgm
+Date : 2026-11-17 09:28:57
+Exécutions : 100
+
+Moyenne : 0.006776 ms
+Écart-type : 0.001832 ms
+Médiane : 0.006324 ms
+Minimum : 0.005932 ms
+Maximum : 0.019356 ms

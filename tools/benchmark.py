@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import argparse
 import csv
+import os
+import platform
 import shlex
 import statistics
 import subprocess
@@ -9,6 +11,53 @@ from datetime import datetime
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+
+
+def lire_fichier(chemin):
+    try:
+        return Path(chemin).read_text()
+    except OSError:
+        return ""
+
+
+def infos_pc():
+    cpuinfo = lire_fichier("/proc/cpuinfo")
+
+    processeur = platform.processor() or "inconnu"
+    coeurs = set()
+    id_physique = "0"
+    for ligne in cpuinfo.splitlines():
+        if ":" not in ligne:
+            continue
+        cle, valeur = (x.strip() for x in ligne.split(":", 1))
+        if cle == "model name":
+            processeur = valeur
+        elif cle == "physical id":
+            id_physique = valeur
+        elif cle == "core id":
+            coeurs.add((id_physique, valeur))
+
+    ram = "inconnue"
+    for ligne in lire_fichier("/proc/meminfo").splitlines():
+        if ligne.startswith("MemTotal:"):
+            ram = f"{int(ligne.split()[1]) / 1024 / 1024:.1f} Go"
+            break
+
+    systeme = f"{platform.system()} {platform.release()}"
+    for ligne in lire_fichier("/etc/os-release").splitlines():
+        if ligne.startswith("PRETTY_NAME="):
+            systeme = ligne.split("=", 1)[1].strip('"') + f" (noyau {platform.release()})"
+            break
+
+    return {
+        "Processeur": processeur,
+        "Cœurs physiques": len(coeurs) if coeurs else "inconnu",
+        "Threads (cœurs logiques)": os.cpu_count(),
+        "RAM": ram,
+        "OS": systeme,
+        "OMP_NUM_THREADS": os.environ.get("OMP_NUM_THREADS", "non défini"),
+    }
+
 
 parser = argparse.ArgumentParser(description="Benchmark d'un programme (N exécutions)")
 parser.add_argument("-i", "--input", required=True, help="commande à exécuter (programme + arguments)")
@@ -77,7 +126,7 @@ with open(csv_path, "w", newline="") as fichier:
 
 executions = range(1, args.runs + 1)
 
-plt.figure(figsize=(10, 5))
+plt.figure(figsize=(10, 6))
 plt.scatter(executions, temps, s=12, label="Temps mesuré")
 plt.axhline(moyenne, color="red", linestyle="--", label="Moyenne")
 plt.axhline(moyenne + ecart_type, color="orange", linestyle=":", label="Moyenne ± écart-type")
@@ -87,6 +136,14 @@ plt.ylabel("Temps de calcul (ms)")
 plt.title(f"{args.name} : {args.input}")
 plt.legend()
 plt.grid(True)
+
+infos = infos_pc()
+resume_pc = (
+    f"{infos['Processeur']} | {infos['Cœurs physiques']} cœurs / {infos['Threads (cœurs logiques)']} threads | "
+    f"RAM {infos['RAM']} | {infos['OS']} | OMP_NUM_THREADS={infos['OMP_NUM_THREADS']}"
+)
+plt.figtext(0.5, 0.01, resume_pc, ha="center", fontsize=8, color="gray")
+plt.tight_layout(rect=(0, 0.04, 1, 1))
 
 plt.savefig(png_path)
 print(f"\nRésultats dans {dossier}/ : {csv_path.name}, {png_path.name}, {stats_path.name}, {info_path.name}")

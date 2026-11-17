@@ -1,0 +1,10 @@
+Test : short_montagne
+Commande : ./rehaussement_short data/MontagneFoncee.pgm
+Date : 2026-11-17 09:29:01
+Exécutions : 100
+
+Moyenne : 0.054044 ms
+Écart-type : 0.009226 ms
+Médiane : 0.049891 ms
+Minimum : 0.042635 ms
+Maximum : 0.087138 ms

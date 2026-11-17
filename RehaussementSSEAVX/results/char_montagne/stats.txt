@@ -1,0 +1,10 @@
+Test : char_montagne
+Commande : ./rehaussement_char data/MontagneFoncee.pgm
+Date : 2026-11-17 09:29:07
+Exécutions : 100
+
+Moyenne : 0.027506 ms
+Écart-type : 0.005241 ms
+Médiane : 0.025985 ms
+Minimum : 0.022153 ms
+Maximum : 0.064854 ms

@@ -1,0 +1,10 @@
+Test : image1_newpc
+Commande : ./a.out ./data/image1.pgm
+Date : 2026-11-16 12:14:50
+Exécutions : 100
+
+Moyenne : 0.098081 ms
+Écart-type : 0.046880 ms
+Médiane : 0.084229 ms
+Minimum : 0.049412 ms
+Maximum : 0.250085 ms

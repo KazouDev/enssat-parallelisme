@@ -1,0 +1,10 @@
+Test : image2_newpc
+Commande : ./a.out ./data/MontagneFoncee.pgm
+Date : 2026-11-16 12:16:45
+Exécutions : 100
+
+Moyenne : 0.369905 ms
+Écart-type : 0.114723 ms
+Médiane : 0.336988 ms
+Minimum : 0.316043 ms
+Maximum : 1.225824 ms

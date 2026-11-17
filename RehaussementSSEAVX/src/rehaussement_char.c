@@ -4,147 +4,224 @@
 #include <time.h>
 #include <immintrin.h>
 
-#define MAX_VALEUR 255
-#define BILLION 1000000000.0
+#define InitClock    struct timespec start, stop
+#define ClockStart   clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start)
+#define ClockEnd     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &stop)
+#define BILLION      1000000000L
+#define ClockMesure_Sec "Temps de calcul %2.9f s\n",(( stop.tv_sec - start.tv_sec )+ (stop.tv_nsec - start.tv_nsec )/(double)BILLION)
+#define ClockMesure_m_Sec "Temps de calcul %2.6f ms\n",(( stop.tv_sec - start.tv_sec )*1000.0 + (stop.tv_nsec - start.tv_nsec )/1000000.0)
+#define ClockMesure_u_Sec "Temps de calcul %2.3f us\n",(( stop.tv_sec - start.tv_sec )*1000000.0 + (stop.tv_nsec - start.tv_nsec )/1000.0)
 
-typedef unsigned char Pixel;
+#define MAX_CHAINE 256
+#define MAX_VALEUR 255
+#define NBPOINTSPARLIGNES 15
+
+#define MIN(a,b) ((a) < (b) ? (a) : (b))
+#define MAX(a,b) ((a) > (b) ? (a) : (b))
+
+#define CHECK_ALLOC(ptr) if (!(ptr)) { fprintf(stderr, "Erreur d'allocation mémoire\n"); exit(EXIT_FAILURE); }
 
 typedef struct {
     int width;
     int height;
-    Pixel *data;
-} Image;
-
-Image lire_image(const char *nom) {
-    FILE *f = fopen(nom, "r");
-    if (!f) { perror(nom); exit(1); }
-
-    char mot[256];
-    if (fscanf(f, "%255s", mot) != 1 || strcmp(mot, "P2") != 0) {
-        fprintf(stderr, "Format P2 attendu\n"); exit(1);
-    }
-
-    int c = fgetc(f);
-    while (c == ' ' || c == '\n' || c == '\r' || c == '\t' || c == '#') {
-        if (c == '#') {
-            while (c != '\n' && c != EOF) c = fgetc(f);
-        }
-        c = fgetc(f);
-    }
-    if (c != EOF) ungetc(c, f);
-
     int maxval;
-    Image img;
-    if (fscanf(f, "%d %d %d", &img.width, &img.height, &maxval) != 3 ||
-        img.width <= 0 || img.height <= 0 || maxval < 1 || maxval > 255) {
-        fprintf(stderr, "Dimensions ou maxval invalides (PGM 8 bits attendu)\n"); exit(1);
+    int **data;
+} ImagePGM;
+
+int **alloc_image(int height, int width) {
+    int **img = malloc(height * sizeof(int *));
+    CHECK_ALLOC(img);
+    for (int i = 0; i < height; i++) {
+        img[i] = calloc(width, sizeof(int));
+        CHECK_ALLOC(img[i]);
+    }
+    return img;
+}
+
+void free_image(ImagePGM img) {
+    for (int i = 0; i < img.height; i++)
+        free(img.data[i]);
+    free(img.data);
+}
+
+ImagePGM read_pgm(const char *filename) {
+    FILE *f = fopen(filename, "r");
+    if (!f) {
+        perror("Erreur ouverture fichier source");
+        exit(EXIT_FAILURE);
     }
 
-    size_t n = (size_t)img.width * img.height;
-    img.data = malloc(n * sizeof(Pixel));
-    if (!img.data) { perror("malloc"); exit(1); }
+    ImagePGM img;
+    char line[MAX_CHAINE];
 
-    for (size_t i = 0; i < n; i++) {
-        int valeur;
-        if (fscanf(f, "%d", &valeur) != 1 || valeur < 0 || valeur > maxval) {
-            fprintf(stderr, "Pixel invalide\n"); exit(1);
+    if (!fgets(line, sizeof(line), f) || strncmp(line, "P2", 2) != 0) {
+        fprintf(stderr, "Erreur : format non supporté (P2 attendu)\n");
+        exit(EXIT_FAILURE);
+    }
+
+    do {
+        if (!fgets(line, sizeof(line), f)) {
+            fprintf(stderr, "Erreur lecture dimensions\n");
+            exit(EXIT_FAILURE);
         }
-        img.data[i] = (Pixel)valeur;
-    }
+    } while (line[0] == '#');
+
+    sscanf(line, "%d %d", &img.width, &img.height);
+    fscanf(f, "%d", &img.maxval);
+
+    img.data = alloc_image(img.height, img.width);
+
+    for (int i = 0; i < img.height; i++)
+        for (int j = 0; j < img.width; j++)
+            fscanf(f, "%d", &img.data[i][j]);
+
     fclose(f);
     return img;
 }
 
-void ecrire_image(const char *nom, Image img) {
-    FILE *f = fopen(nom, "w");
-    if (!f) { perror(nom); exit(1); }
-    fprintf(f, "P2\n%d %d\n255\n", img.width, img.height);
-    size_t n = (size_t)img.width * img.height;
-    for (size_t i = 0; i < n; i++) {
-        fprintf(f, "%d%c", (int)img.data[i], (i + 1) % 15 == 0 ? '\n' : ' ');
+void write_pgm(const char *filename, ImagePGM img) {
+    FILE *f = fopen(filename, "w");
+    if (!f) {
+        perror("Erreur ouverture fichier destination");
+        exit(EXIT_FAILURE);
+    }
+
+    fprintf(f, "P2\n");
+    fprintf(f, "# Image étalée automatiquement\n");
+    fprintf(f, "%d %d\n%d\n", img.width, img.height, img.maxval);
+
+    int n = 0;
+    for (int i = 0; i < img.height; i++) {
+        for (int j = 0; j < img.width; j++) {
+            fprintf(f, "%3d ", img.data[i][j]);
+            n++;
+            if (n == NBPOINTSPARLIGNES) {
+                n = 0;
+                fprintf(f, "\n");
+            }
+        }
     }
     fprintf(f, "\n");
     fclose(f);
 }
 
-void etalement_lineaire(Image in, Image out) {
-    size_t n = (size_t)in.width * in.height;
-    __m256i vmin = _mm256_set1_epi8((char)255);
-    __m256i vmax = _mm256_setzero_si256();
-    int min = 255, max = 0;
-    size_t i = 0;
+void etalement_avx_char(const unsigned char *in, unsigned char *out, int n) {
+    int i;
 
-    for (; i + 32 <= n; i += 32) {
-        __m256i pixels = _mm256_loadu_si256((const __m256i *)&in.data[i]);
-        vmin = _mm256_min_epu8(vmin, pixels);
-        vmax = _mm256_max_epu8(vmax, pixels);
+    __m256i vmin = _mm256_set1_epi8((char)MAX_VALEUR);
+    __m256i vmax = _mm256_set1_epi8(0);
+
+    for (i = 0; i + 32 <= n; i += 32) {
+        __m256i v = _mm256_loadu_si256((const __m256i *)&in[i]);
+        vmin = _mm256_min_epu8(vmin, v);
+        vmax = _mm256_max_epu8(vmax, v);
     }
-    unsigned char petits[32], grands[32];
-    _mm256_storeu_si256((__m256i *)petits, vmin);
-    _mm256_storeu_si256((__m256i *)grands, vmax);
-    for (int j = 0; j < 32; j++) {
-        if (petits[j] < min) min = petits[j];
-        if (grands[j] > max) max = grands[j];
+
+    unsigned char tmin[32], tmax[32];
+    _mm256_storeu_si256((__m256i *)tmin, vmin);
+    _mm256_storeu_si256((__m256i *)tmax, vmax);
+    int min = MAX_VALEUR, max = 0;
+    for (int k = 0; k < 32; k++) {
+        min = MIN(min, tmin[k]);
+        max = MAX(max, tmax[k]);
     }
     for (; i < n; i++) {
-        if (in.data[i] < min) min = in.data[i];
-        if (in.data[i] > max) max = in.data[i];
+        min = MIN(min, in[i]);
+        max = MAX(max, in[i]);
     }
 
     if (max == min) {
-        memset(out.data, 0, n * sizeof(Pixel));
+        memcpy(out, in, n);
         return;
     }
 
-    float facteur = 255.0f / (max - min);
-    __m256 vmin2 = _mm256_set1_ps((float)min);
-    __m256 vfacteur = _mm256_set1_ps(facteur);
-    i = 0;
-    for (; i + 32 <= n; i += 32) {
-        __m256i blocs[4];
-        for (int j = 0; j < 4; j++) {
-            __m128i pixels = _mm_loadl_epi64((const __m128i *)&in.data[i + j * 8]);
-            __m256 valeurs = _mm256_cvtepi32_ps(_mm256_cvtepu8_epi32(pixels));
-            valeurs = _mm256_mul_ps(_mm256_sub_ps(valeurs, vmin2), vfacteur);
-            blocs[j] = _mm256_cvttps_epi32(valeurs);
-        }
-        __m256i a = _mm256_packs_epi32(blocs[0], blocs[1]);
-        __m256i b = _mm256_packs_epi32(blocs[2], blocs[3]);
-        a = _mm256_permute4x64_epi64(a, 0xD8);
-        b = _mm256_permute4x64_epi64(b, 0xD8);
-        __m256i resultat = _mm256_packus_epi16(a, b);
-        resultat = _mm256_permute4x64_epi64(resultat, 0xD8);
-        _mm256_storeu_si256((__m256i *)&out.data[i], resultat);
+    float facteur = (float)MAX_VALEUR / (float)(max - min);
+    unsigned short fq = (unsigned short)(facteur * 256.0f + 0.5f);
+
+    __m256i vfact = _mm256_set1_epi16((short)fq);
+    __m256i masque_haut = _mm256_set1_epi16((short)0xFF00);
+    vmin = _mm256_set1_epi8((char)min);
+
+    for (i = 0; i + 32 <= n; i += 32) {
+        __m256i v = _mm256_loadu_si256((const __m256i *)&in[i]);
+        v = _mm256_sub_epi8(v, vmin);
+
+        __m256i pairs = _mm256_slli_epi16(v, 8);
+        __m256i impairs = _mm256_and_si256(v, masque_haut);
+
+        pairs = _mm256_mulhi_epu16(pairs, vfact);
+        impairs = _mm256_mulhi_epu16(impairs, vfact);
+
+        v = _mm256_or_si256(pairs, _mm256_slli_epi16(impairs, 8));
+        _mm256_storeu_si256((__m256i *)&out[i], v);
     }
-    for (; i < n; i++) out.data[i] = (unsigned char)((in.data[i] - min) * facteur);
+    for (; i < n; i++)
+        out[i] = (unsigned char)((((unsigned)(in[i] - min) << 8) * fq) >> 16);
 }
 
-
 int main(int argc, char **argv) {
+
+    InitClock;
+
     if (argc != 2) {
         fprintf(stderr, "Usage : %s image.pgm\n", argv[0]);
-        return 1;
+        return EXIT_FAILURE;
     }
-    Image input = lire_image(argv[1]);
-    Image output = {input.width, input.height, malloc((size_t)input.width * input.height * sizeof(Pixel))};
-    if (!output.data) { perror("malloc"); return 1; }
+
+    char srcFile[MAX_CHAINE];
+    char dstFile[MAX_CHAINE + 16];
+
+    snprintf(srcFile, sizeof(srcFile), "%s", argv[1]);
+    snprintf(dstFile, sizeof(dstFile), "%s_char.pgm", argv[1]);
+
+    printf("Lecture du fichier : %s\n", srcFile);
+    ImagePGM input = read_pgm(srcFile);
+
+    ImagePGM output = {
+        .width = input.width,
+        .height = input.height,
+        .maxval = input.maxval,
+        .data = alloc_image(input.height, input.width)
+    };
+
+    int w = input.width;
+    int n = input.width * input.height;
+
+    unsigned char *in = malloc(n * sizeof(unsigned char));
+    unsigned char *out = malloc(n * sizeof(unsigned char));
+    CHECK_ALLOC(in);
+    CHECK_ALLOC(out);
+
+    for (int i = 0; i < input.height; i++)
+        for (int j = 0; j < w; j++)
+            in[i * w + j] = (unsigned char)input.data[i][j];
+
+    memset(out, 0, n * sizeof(unsigned char));
 
     printf("Traitement de l'image (%dx%d)...\n", input.width, input.height);
-    struct timespec start, stop;
-    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start);
-    etalement_lineaire(input, output);
-    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &stop);
 
-    double sec = (stop.tv_sec - start.tv_sec) + (stop.tv_nsec - start.tv_nsec) / BILLION;
-    printf("Temps de calcul %2.9f s\n", sec);
-    printf("Temps de calcul %2.6f ms\n", sec * 1000.0);
-    printf("Temps de calcul %2.3f us\n", sec * 1000000.0);
+    ClockStart;
 
-    char nom[1024];
-    snprintf(nom, sizeof(nom), "%s_char_new.pgm", argv[1]);
-    ecrire_image(nom, output);
-    printf("Écriture du fichier résultat : %s\n", nom);
-    free(input.data);
-    free(output.data);
-    return 0;
+    etalement_avx_char(in, out, n);
+
+    ClockEnd;
+
+    printf(ClockMesure_Sec);
+    printf(ClockMesure_m_Sec);
+    printf(ClockMesure_u_Sec);
+
+    for (int i = 0; i < output.height; i++)
+        for (int j = 0; j < w; j++)
+            output.data[i][j] = (int)out[i * w + j];
+
+    printf("Écriture du fichier résultat : %s\n", dstFile);
+    write_pgm(dstFile, output);
+
+    free(in);
+    free(out);
+    free_image(input);
+    free_image(output);
+
+    printf("Traitement terminé avec succès.\n");
+    return EXIT_SUCCESS;
 }

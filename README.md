@@ -43,7 +43,7 @@ pip install -r requirements.txt
 
 ```bash
 cd TP1
-gcc src/rehaussement.c -o a.out
+gcc -02 src/rehaussement.c -o a.out
 python3 ../tools/benchmark.py -i "./a.out data/image1.pgm" -n 100 -o results -t image1
 # → results/image1/image1.csv, image1.png, stats.txt, system_info.txt
 ```
